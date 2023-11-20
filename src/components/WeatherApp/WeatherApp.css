@@ -85,3 +85,13 @@
 .icon {
     margin-top: 10px;
 }
+
+.title {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    padding-top: 2.5rem;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #b87333;
+}
