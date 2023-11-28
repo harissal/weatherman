@@ -30,15 +30,18 @@ const WeatherApp = () => {
         feelsLike: '',
         temp_min: '',
         temp_max: '',
+    });
+
+    const [forecastData, setForecastData] = useState({
+        forecastTemp: '',
         date: '',
-        forecastMin: [],
-        forecastMax: [],
+        icon: '',
     });
 
     let api_key="7c51fe4450de2776410ba2027d961505";
 
     const [wicon, setWicon] = useState(overcast);
-    const [backgroundColor, setBackgroundColor] = useState("linear-gradient(180deg, #9a9a9a 0%, #e9e9e9 100%)");
+    const [backgroundColor, setBackgroundColor] = useState("linear-gradient(180deg, #1f4037 0%, #99f2c8 100%)");
 
     const searchByCity = async () => {
         try {
@@ -146,63 +149,72 @@ const WeatherApp = () => {
             setWicon(thunderstorm_night);
             setBackgroundColor("linear-gradient(180deg, #170E13, #7a7aDB");
         }
-        else if (existingData.weather[0].icon === "13d" || existingData.weather[0].icon === "13n") {
+        else if (existingData.weather[0].icon === "13d") {
             setWicon(snow);
             setBackgroundColor("linear-gradient(180deg, #d4f1f8, #71a6d1");
         }
+        else if (existingData.weather[0].icon === "13n") {
+            setWicon(snow);
+            setBackgroundColor("linear-gradient(#0F2027, #203A43, #2C5364)");
+        }
+
+        const locationUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${cityInput.value}&limit=1&appid=${api_key}`
+        const locationResponse = await fetch(locationUrl);
+        const locationData = await locationResponse.json();
+
+        if (locationData && locationData.length > 0) {
+              const latitude = locationData[0].lat;
+              const longitude = locationData[0].lon;
+
+              const forecastUrl = `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=Imperial&appid=${api_key}`;
+              const forecastResponse = await fetch(forecastUrl);
+              const forecastData = await forecastResponse.json();
+
+              if (forecastData && forecastData.list) {
+                const upcomingForecast = forecastData.list
+                .filter(day => day.dt_txt.includes("12:00:00"))
+                .map(day => ({
+                    forecastTemp: `${Math.floor(day.main.temp)}°F`,
+                    date: `${new Date(day.dt * 1000).toLocaleDateString()}`,
+                    icon: day.weather[0].icon,
+                }));
+                setForecastData(upcomingForecast);
+
+              } else {
+                    console.error("Error fetching forecast data");
+                }
+            } else {
+                console.error("Error fetching location data");
+            }
     } catch (error) {
         console.error("Error fetching weather data", error);
     }
-    
 };
 
-    const searchByLocation = async () => {
-        try {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    const { latitude, longitude } = position.coords;
-
-                    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=Imperial&appid=${api_key}`;
-                    let response = await fetch(url);
-
-                    if(!response.ok) {
-                        throw new Error("City not found, try again");
-                    }
-
-                    let data = await response.json();
-
-                    const forecastData = data.list.filter(item => item.dt_txt.includes("12:00:00"));
-                    const maxTemp = forecastData.map(item => item.main.temp_max) + "°F";
-                    const minTemp = forecastData.map(item => item.main.temp_min) + "°F";
-                    
-                    setWeatherData({
-                        forecastMin: minTemp,
-                        forecastMax: maxTemp,
-                        date: data.list[0].dt_txt,
-                        location: data.city.name,
-                    });
-                });
-            }
-        } catch (error) {
-            console.error("Error fetching weather data", error);
-        }
-    };
-
-    const handleSearch = () => {
-        const cityInput = document.getElementsByClassName("cityInput")[0];
-        const cityName = cityInput.value.trim();
-
-        if(cityName === "") {
-            return 0;
-        }
-
-        searchByCity(cityName);
-    };
+const getForecastIcon = (icon) => {
+    switch (icon) {
+        case "01d":
+            return sunny;
+        case "02d":
+            return partly_cloudy;
+        case "03d":
+        case "04d":
+            return overcast;
+        case "09d":
+        case "10d":
+            return rain;
+        case "11d":
+            return thunderstorm;
+        case "13d":
+            return snow;
+        default:
+            return overcast;
+    }
+};
 
     return (
         <div className="container" style={{ background: backgroundColor }}>
-
-<text className="title">WeatherMan: Search by City or by Geolocation!</text>
+            <text className="title">WeatherBot</text>
             <div className="top-bar">
                 <input type="text" className="cityInput" placeholder="City" />
                 <div className="search-icon" onClick={() => {searchByCity()}}>
@@ -255,8 +267,24 @@ const WeatherApp = () => {
                     </div>
                 </div>
                 </div>
+                <div className="forecast-text">5-Day Forecast</div>
+                {forecastData.length > 0 ? (
+                <div className="forecast-container">
+                            {forecastData.map((forecast, index) => (
+                                <div className="forecast-element" key={index}>
+                                    <div className="data">
+                                    <div className="forecast-min">{forecast.forecastTemp}</div>
+                                    <div className="forecast-min">{forecast.date}</div>
+                                    <img src={getForecastIcon(forecast.icon)} alt="" className="forecast-icon" />
+                                    </div>
+                                    </div>
+                            ))}
+                            </div>
+                ) : (
+                    <div className="error-message">No forecast data available</div>
+                )}
         </div>
-    )
+    );
 } 
 
 export default WeatherApp;

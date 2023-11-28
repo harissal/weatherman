@@ -1,6 +1,9 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
+
 .container {
     width: auto;
-    height: 55rem;
+    height: auto;
     margin: auto;
 }
 
@@ -23,6 +26,7 @@
     color: #626262;
     font-size: 1.5rem;
     font-weight: 400;
+    font-family: 'Raleway', sans-serif;
 }
 
 .search-icon {
@@ -48,6 +52,7 @@
     color: white;
     font-size: 7.5rem;
     font-weight: 400;
+    font-family: 'Raleway', sans-serif;
 }
 
 .weather-location {
@@ -56,6 +61,7 @@
     color: white;
     font-size: 4rem;
     font-weight: 400;
+    font-family: 'Raleway', sans-serif;
 }
 
 .data-container {
@@ -75,11 +81,29 @@
 .data {
     font-size: 34px;
     font-weight: 400;
+    font-family: 'Raleway', sans-serif;
 }
 
 .text {
     font-size: 20px;
     font-weight: 400;
+    color: white;
+    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-family: 'Raleway', sans-serif;
+}
+
+.forecast-text {
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+    margin-top: 5rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-family: 'Raleway', sans-serif;
 }
 
 .icon {
@@ -91,7 +115,38 @@
     display: flex;
     justify-content: center;
     padding-top: 2.5rem;
-    font-size: 1rem;
-    font-weight: 400;
+    font-size: 2rem;
+    font-family: 'Raleway', sans-serif;
     color: #b87333;
+}
+
+.forecast-container {
+    margin-top: 50px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.forecast-element {
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.forecast-min {
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.error-message {
+    margin-top: 50px;
+    color: black;
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    font-family: 'Raleway', sans-serif;
+    padding-bottom: 5rem;
 }
