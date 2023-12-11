@@ -158,7 +158,7 @@ const WeatherApp = () => {
             setBackgroundColor("linear-gradient(#0F2027, #203A43, #2C5364)");
         }
 
-        const locationUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${cityInput.value}&limit=1&appid=${api_key}`
+        const locationUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${cityInput.value}&limit=1&appid=${api_key}`
         const locationResponse = await fetch(locationUrl);
         const locationData = await locationResponse.json();
 
@@ -166,7 +166,7 @@ const WeatherApp = () => {
               const latitude = locationData[0].lat;
               const longitude = locationData[0].lon;
 
-              const forecastUrl = `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=Imperial&appid=${api_key}`;
+              const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=Imperial&appid=${api_key}`;
               const forecastResponse = await fetch(forecastUrl);
               const forecastData = await forecastResponse.json();
 
