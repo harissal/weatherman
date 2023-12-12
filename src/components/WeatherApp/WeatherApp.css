@@ -127,6 +127,12 @@
     justify-content: space-between;
 }
 
+@media (max-width: 768px) {
+    .forecast-container {
+        flex-direction: column; 
+    }
+}
+
 .forecast-element {
     margin: auto;
     display: flex;
